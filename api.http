@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/weather?city=Samarqand
+GET http://localhost:3000/api/weather?city=Paris

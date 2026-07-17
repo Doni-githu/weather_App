@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Router } from "express";
-
+import { Redis }from "ioredis"
+import redis from "../redis.js";
 const router = Router()
 
 
@@ -8,7 +9,17 @@ const router = Router()
 router.get("/weather", async (req, res) => {
     const city = req.query.city || "London"; // Default to London if no city is provided
     try {
+
+        const dataFromRedis = await redis.get(city)
+
+        if(dataFromRedis){
+            const data = JSON.parse(dataFromRedis)
+            return res.status(200).json({ temp_c: data.current.temp_c, condition: data.current.condition.text, city: data.location.name, country: data.location.country });
+        }
+
         const data = await axios.get(`https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${city}`)
+        await redis.setex(city, 900, JSON.stringify(data.data));
+
         res.status(200).json({ temp_c: data.data.current.temp_c, condition: data.data.current.condition.text, city: data.data.location.name, country: data.data.location.country });
     } catch (error) {
         console.log(error.response.statusText)
