@@ -1,11 +1,45 @@
 import axios from "axios";
 import { Router } from "express";
-import { Redis }from "ioredis"
 import redis from "../redis.js";
 const router = Router()
 
 
 
+/**
+ * @swagger
+ * /weather:
+ *   get:
+ *     summary: Get current weather information for a city
+ *     description: Fetches the current weather data for a specified city. Defaults to London if no city is provided.
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: The name of the city to fetch weather data for
+ *     responses:
+ *       200:
+ *         description: Weather data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 temp_c:
+ *                   type: number
+ *                   description: Temperature in Celsius
+ *                 condition:
+ *                   type: string
+ *                   description: Weather condition description
+ *                 city:
+ *                   type: string
+ *                   description: Name of the city
+ *                 country:
+ *                   type: string
+ *                   description: Name of the country
+ *       500:
+ *         description: Error in fetching data from 3rd party API
+ */
 router.get("/weather", async (req, res) => {
     const city = req.query.city || "London"; // Default to London if no city is provided
     try {

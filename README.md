@@ -19,7 +19,7 @@ A simple weather application that fetches current weather data for a specified c
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/weatherapi.git
+   git clone https://github.com/Doni-githu/weather_App.git
    cd weatherapi
    ```
 
@@ -81,3 +81,4 @@ Fetches the current weather for a specified city.
 ## License
 
 This project is licensed under the ISC License.
+[demo URL](https://weather-app-mu6e.onrender.com)

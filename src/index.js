@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import { rateLimit } from "express-rate-limit"
 import redis from "./redis.js";
-import {RedisStore} from "rate-limit-redis"
+import { RedisStore } from "rate-limit-redis"
 import weatherRoutes from "./routes/weather.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config({ quiet: true });
 
@@ -24,11 +26,30 @@ const limiter = rateLimit({
   }
 })
 
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Weather API",
+      version: "1.0.0",
+      description: "API for fetching weather data",
+    },
+    servers: [
+      {
+        url: `https://weather-app-mu6e.onrender.com`,
+      },
+    ],
+  },
+  apis: ["./src/routes/*.js"],
+};
+
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
 
 app.use(limiter)
 app.use(express.json());
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/api", weatherRoutes);
 
 const startServer = () => {
